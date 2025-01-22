@@ -1,12 +1,10 @@
 #include "ESP32_NOW.h"
 #include "WiFi.h"
 #include "BTHome.h"
-
 #include <esp_mac.h>  // For the MAC2STR and MACSTR macros
 
 /* Definitions */
 
-#define DEVICE_NAME         "EspSensor"
 #define ESPNOW_WIFI_CHANNEL 1
 
 /* Classes */
@@ -54,9 +52,7 @@ ESP_NOW_Broadcast_Peer broadcast_peer(ESPNOW_WIFI_CHANNEL, WIFI_IF_STA, NULL);
 
 void setup() {
   Serial.begin(115200);
-  while (!Serial) {
-    delay(10);
-  }
+  delay(1000);
 
   // Initialize the Wi-Fi module
   WiFi.mode(WIFI_STA);
@@ -79,24 +75,19 @@ void setup() {
     ESP.restart();
   }
 
-  bthome.begin(DEVICE_NAME, false, "", false);
+  bthome.begin(false, "", false);
   Serial.println("Setup complete. Broadcasting messages every 5 seconds.");
 }
 
 void loop() {
   // Broadcast a message to all devices within the network
   bthome.resetMeasurement();
-  bthome.addMeasurement(ID_HUMIDITY_PRECISE, 40.00f);//3
-  bthome.addMeasurement(ID_PRESSURE, 1023.86f);//4
-  bthome.addMeasurement_state(STATE_POWER_ON, STATE_ON);//2
-  bthome.addMeasurement(ID_TEMPERATURE_PRECISE, 35.00f);//3
-  bthome.addMeasurement(ID_ILLUMINANCE, 50.81f);//4 bytes
   /*
+  bthome.addMeasurement(ID_ILLUMINANCE, 50.81f);//4 bytes
   bthome.addMeasurement(ID_CO2, (uint64_t)1208);//3
   bthome.addMeasurement(ID_TVOC, (uint64_t)350);//3
-  bthome.addMeasurement_state(EVENT_BUTTON, EVENT_BUTTON_PRESS);//2 button press
-  bthome.addMeasurement_state(EVENT_DIMMER, EVENT_DIMMER_RIGHT, 6); //3, rotate right 6 steps
   */
+  bthome.addMeasurement_state(EVENT_BUTTON, EVENT_BUTTON_PRESS);//2 button press
   std::string str = bthome.buildPacket();
   const uint8_t *data = reinterpret_cast<const uint8_t *>(str.data());
 

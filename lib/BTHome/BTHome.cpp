@@ -3,8 +3,7 @@
 #include <esp_mac.h>
 #include "BTHome.h"
 
-void BTHome::begin(String dname, bool encryption, uint8_t const* const key, bool trigger_based_device) {
-  setDeviceName(dname);
+void BTHome::begin(bool encryption, uint8_t const* const key, bool trigger_based_device) {
   if (encryption) {
     this->m_encryptEnable = true;
 #if defined(ESP32)
@@ -21,20 +20,14 @@ void BTHome::begin(String dname, bool encryption, uint8_t const* const key, bool
   resetMeasurement();
 }
 
-void BTHome::begin(String dname, bool encryption, String key, bool trigger_based_device) {
+void BTHome::begin(bool encryption, String key, bool trigger_based_device) {
   uint8_t bind_key[BIND_KEY_LEN];
   for (uint8_t i = 0; i < BIND_KEY_LEN; i++) {
     bind_key[i] = strtol(key.substring(i * 2, i * 2 + 2).c_str(), NULL, BIND_KEY_LEN);
   }
-  begin(dname, encryption, bind_key, trigger_based_device);
+  begin(encryption, bind_key, trigger_based_device);
 }
   
-
-void BTHome::setDeviceName(String dname) {
-  if (!dname.isEmpty())
-    this->dev_name = dname;
-}
-
 void BTHome::resetMeasurement() {
   this->m_sensorDataIdx = 0;
   this->last_object_id = 0;
@@ -199,6 +192,7 @@ std::string BTHome::buildPacket() {
             serviceData += NO_ENCRYPT_TRIGGER_BASE;
         else
             serviceData += NO_ENCRYPT;
+
         for (int i = 0; i < this->m_sensorDataIdx; i++) {
             serviceData += this->m_sensorData[i]; // Add the sensor data to the Service Data
         }

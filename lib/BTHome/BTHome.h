@@ -116,8 +116,8 @@
 
 class BTHome {
   public:
-    void begin(String dname = "DIY-sensor", bool encryption = false, uint8_t const* const key = NULL, bool trigger_based_device = false);
-    void begin(String dname = "DIY-sensor", bool encryption = false, String key = "", bool trigger_based_device = false);
+    void begin(bool encryption = false, uint8_t const* const key = NULL, bool trigger_based_device = false);
+    void begin(bool encryption = false, String key = "", bool trigger_based_device = false);
     void setDeviceName(String dname = "");
     std::string buildPacket();
     void resetMeasurement();
