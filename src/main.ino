@@ -94,7 +94,7 @@ void setup() {
     }
 
     bthome.begin(false, "", false);
-    Serial.println("Setup complete. Broadcasting messages every 5 seconds.");
+    Serial.println("Setup complete. Broadcasting messages.");
 
     // Broadcast a message to all devices within the network
     bthome.resetMeasurement();
@@ -113,7 +113,6 @@ void setup() {
         Serial.println("Failed to broadcast message");
     }
 
-
     esp_deep_sleep_enable_gpio_wakeup(1 << PIN_BTN, ESP_GPIO_WAKEUP_GPIO_LOW);
     Serial.println("Entering deep sleep...");
     delay(2000);
@@ -123,12 +122,9 @@ void setup() {
     } else {
         esp_deep_sleep_start();
     }
-
 }
 
 void loop() {
-    digitalWrite(PIN_LED, LOW);
     delay(5000);
     Serial.println("loop");
-    digitalWrite(PIN_LED, HIGH);
 }
